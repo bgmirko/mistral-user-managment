@@ -1,11 +1,17 @@
 import { UserService } from "../services/userService";
+import db from "../database/models";
 
-const SPEC_CHAR_REGEX = /[- _/]/ig;
+class UserController {
+  private userService: UserService;
 
-export class UserController {
-  static async getUsers(req, res) {
+  constructor(){
+    console.log("----> user controller has started....");
+    this.userService = new UserService(db);
+  }
+
+  async getUsers(req, res) {
     try {
-      const { rows, count } = await UserService.getUsers(req.query);
+      const { rows, count } = await this.userService.getUsers(req.query);
       res.json({
         success: true,
         data: {
@@ -22,16 +28,16 @@ export class UserController {
     }
   }
 
-  static async createUser(req, res) {
+  async createUser(req, res) {
     try {
-      const user = await UserService.getUserByEmail(req.body.email);
+      const user = await this.userService.getUserByEmail(req.body.email);
       if (user) {
         return res.status(400).json({
           success: false,
           message: "User already exists",
         });
       }
-      const newUser = await UserService.createUser(req.body);
+      const newUser = await this.userService.createUser(req.body);
       res.json({
         success: true,
         data: newUser,
@@ -45,10 +51,10 @@ export class UserController {
     }
   }
 
-  static async deleteUser(req, res) {
+  async deleteUser(req, res) {
     try {
       const uuid = req.params.id;
-      const user = await UserService.getUserById(uuid);
+      const user = await this.userService.getUserById(uuid);
       if (!user) {
         return res.status(400).json({
           success: false,
@@ -59,7 +65,7 @@ export class UserController {
         success: true,
         message: "User is deleted successfully",
       });
-      await UserService.deleteUser(uuid);
+      await this.userService.deleteUser(uuid);
     } catch (error) {
       res.status(400).json({
         success: false,
@@ -68,17 +74,17 @@ export class UserController {
     }
   }
 
-  static async updateUser(req, res) {
+  async updateUser(req, res) {
     try {
       const uuid = req.params.id;
-      const user = await UserService.getUserById(uuid);
+      const user = await this.userService.getUserById(uuid);
       if (!user) {
         return res.status(400).json({
           success: false,
           message: "User already exists",
         });
       }
-      const updatedUser = await UserService.updateUser(uuid, req.body);
+      const updatedUser = await this.userService.updateUser(uuid, req.body);
       res.json({
         success: true,
         data: {
@@ -95,3 +101,5 @@ export class UserController {
     }
   }
 }
+
+export const userController = new UserController();
