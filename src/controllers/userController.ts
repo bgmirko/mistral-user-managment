@@ -21,7 +21,7 @@ class UserController {
         message: "List of users fetch successfully",
       });
     } catch (error) {
-      res.status(400).json({
+      res.status(500).json({
         success: false,
         message: error.message,
       });
@@ -44,7 +44,7 @@ class UserController {
         message: "User is created successfully",
       });
     } catch (error) {
-      res.status(400).json({
+      res.status(500).json({
         success: false,
         message: error.message,
       });
@@ -67,7 +67,7 @@ class UserController {
       });
       await this.userService.deleteUser(uuid);
     } catch (error) {
-      res.status(400).json({
+      res.status(500).json({
         success: false,
         message: error.message,
       });
@@ -93,8 +93,7 @@ class UserController {
         message: "User is updated successfully",
       });
     } catch (error) {
-      res.status(400).json({
-        code: error?.code ?? 400,
+      res.status(500).json({
         success: false,
         message: error.message,
       });
