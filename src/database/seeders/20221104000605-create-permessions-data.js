@@ -1,10 +1,9 @@
 'use strict';
-const bcrypt = require('bcryptjs');
 
 module.exports = {
   async up (queryInterface, Sequelize) {
 
-    return queryInterface.bulkInsert('Permissions', [
+    return queryInterface.bulkInsert('permission', [
       {
         id: 1,
         code: 'Platinum',
@@ -30,6 +29,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('Permissions', null, {});
+    return queryInterface.bulkDelete('permission', null, {});
   }
 };

@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
-// import db from "../database/models";
-import { User } from "../database/modelsTypes";
+import User from "../database/models/user";
+import bcrypt from "bcryptjs";
 
 export class UserService {
   private db;
@@ -39,7 +39,7 @@ export class UserService {
       attributes: { exclude: ["password", "permissionId"] },
       include: {
         model: this.db.Permission,
-        as: "Permission",
+        as: "permission",
         attributes: ["id", "code", "description"],
       },
       where,
@@ -54,12 +54,12 @@ export class UserService {
       where: {
         uuid,
       },
+      attributes: { exclude: ["password"] },
       raw: true,
     });
   }
 
   async createUser(userData: any): Promise<User> {
-    const bcrypt = require("bcryptjs");
     return (
       await this.db.User.create({
         ...userData,
@@ -82,7 +82,6 @@ export class UserService {
    * Update user  data
    */
   async updateUser(uuid: string, userData: any): Promise<User> {
-    const bcrypt = require("bcryptjs");
     await this.db.User.update(
       {
         firstName: userData.firstName,

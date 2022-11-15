@@ -1,1 +1,0 @@
-export { UserAttributes as User } from './models/user';

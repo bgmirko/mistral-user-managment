@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-import db from "./database/models";
+import { sequelize } from "./database/models";
 import { userRoutes } from './routes/userRoutes';
 
 const PORT = process.env.PORT ?? 3000;
@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(PORT, () => {
-    db.sequelize.sync().then(() => {
+    sequelize.sync().then(() => {
         console.log(`App running on port ${PORT}`)
     });
 })

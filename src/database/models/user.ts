@@ -1,80 +1,42 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, BelongsTo, CreatedAt, UpdatedAt, DeletedAt, DataType, BeforeCreate, ForeignKey} from "sequelize-typescript";
+import Permission from "./permession";
 
-export interface UserAttributes {
+@Table({tableName: "user"})
+export default class User extends Model<User> {
+  @Column({type: DataType.UUID, primaryKey: true, defaultValue: DataType.UUIDV4})
   uuid: string;
-  permissionId: number;
+
+  @ForeignKey(() => Permission)
+  @Column({type: DataType.INTEGER})
+  permissionId: string;
+
+  @Column({allowNull: false, validate: {notEmpty: true}})
   firstName: string;
+
+  @Column({allowNull: false, validate: {notEmpty: true}})
   lastName: string;
+
+  @Column({allowNull: false, validate: {notEmpty: true}})
   username: string;
-  password: string;
+
+  @Column({allowNull: false, unique: true, validate: {notEmpty: true, isEmail: true}})
   email: string;
+
+  @Column({allowNull: false, validate: {notEmpty: true}})
+  password: string;
+
+  @Column({defaultValue: true})
   status: boolean;
+
+  @CreatedAt
+  declare createdAt: Date;
+
+  @UpdatedAt
+  declare updatedAt: Date;
+
+  @DeletedAt
+  declare deletedAt: Date;
+
+  @BelongsTo(() => Permission, "permissionId")
+  permission: Permission;
 }
-
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model<UserAttributes> implements UserAttributes {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    uuid: string;
-    permissionId: number;
-    firstName: string;
-    lastName: string;
-    username: string;
-    password: string;
-    email: string;
-    status: boolean;
-
-    static associate(models) {
-      User.belongsTo(models.Permission, { foreignKey:"permissionId", as:"Permission" });
-    }
-  }
-  User.init(
-    {
-      uuid: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-      },
-      permissionId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "Permissions",
-          key: "id",
-        },
-      },
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-    },
-    {
-      sequelize,
-      modelName: "User",
-    }
-  );
-  return User;
-};

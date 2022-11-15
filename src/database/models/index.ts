@@ -1,53 +1,36 @@
-'use strict';
+import { Sequelize } from "sequelize-typescript";
+import User from "./user";
+import Permission from "./permession";
+const env = process.env.NODE_ENV || "development";
+const config = require(__dirname + "/../config/config.js")[env];
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
-const db: any = {};
-const { Client } = require("pg");
+const sequelize = new Sequelize({
+  host: config.host,
+  // port: config.port,
+  database: config.database,
+  username: config.username,
+  password: config.password,
+  dialect: "postgres",
+  "seederStorage": "sequelize",
+  "seederStorageTableName": "sequelize_data",
+  options: {
+    operatorsAliases: false,
+  },
+} as any);
 
-let client;
-client = new Client({
-  user: "postgres",
-  password: "password",
-  host: "db",
-  database: "postgres",
-});
-  
-client.connect();
-  
-// if not exist database will be created, if exist will get error which we will ignore
-client.query(`CREATE DATABASE "${config.database}"`, (err, res) => {
-  client.end();
-});
+const models = {
+  User: User,
+  Permission: Permission,
+};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+sequelize.addModels([User, Permission]);
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js' || file.slice(-3) === '.ts');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+Object.keys(models).forEach((key) => {
+  const model: any = (models as any)[key];
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+  if ("associate" in model) model.associate(models);
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+export { sequelize };
 
-export default db;
+export default models;

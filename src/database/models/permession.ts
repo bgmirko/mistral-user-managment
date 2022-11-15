@@ -1,48 +1,23 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, HasMany, CreatedAt, UpdatedAt, DeletedAt, DataType, BeforeCreate, AutoIncrement, PrimaryKey} from "sequelize-typescript";
 import { PermissionType } from "../../utils/enums";
+import User from "../models/user";
 
-export interface PermissionAttributes {
-  id: number;
+@Table({tableName: "permission"})
+export default class Permission extends Model<Permission> {
+  @Column({allowNull: false, defaultValue: PermissionType.Gold, validate: {notEmpty: true}})
   code: PermissionType;
+
+  @Column({allowNull: true, validate: {notEmpty: true}})
   description: string;
+
+  @CreatedAt
+  declare createdAt: Date;
+
+  @UpdatedAt
+  declare updatedAt: Date;
+
+  @HasMany(() => User, { 
+    foreignKey: "permissionId"
+  })
+  users: User[];
 }
-
-module.exports = (sequelize, DataTypes) => {
-  class Permission
-    extends Model<PermissionAttributes>
-    implements PermissionAttributes
-  {
-    id: number;
-    code: PermissionType;
-    description: string;
-
-    static associate(models) {
-      Permission.hasMany(models.User, {
-        foreignKey: "permissionId",
-      });
-    }
-  }
-  Permission.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      code: {
-        type: DataTypes.ENUM,
-        values: Object.values(PermissionType),
-      },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-    },
-    {
-      sequelize,
-      modelName: "Permission",
-    }
-  );
-  return Permission;
-};
