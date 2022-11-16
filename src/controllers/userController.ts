@@ -1,5 +1,6 @@
 import { UserService } from "../services/userService";
 import db from "../database/models";
+import type { Request, Response } from "express";
 
 class UserController {
   private userService: UserService;
@@ -9,7 +10,7 @@ class UserController {
     this.userService = new UserService(db);
   }
 
-  async getUsers(req, res) {
+  async getUsers(req: Request, res: Response) {
     try {
       const { rows, count } = await this.userService.getUsers(req.query);
       res.json({
@@ -23,12 +24,12 @@ class UserController {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: error,
       });
     }
   }
 
-  async createUser(req, res) {
+  async createUser(req: Request, res: Response) {
     try {
       const user = await this.userService.getUserByEmail(req.body.email);
       if (user) {
@@ -46,12 +47,12 @@ class UserController {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: error,
       });
     }
   }
 
-  async deleteUser(req, res) {
+  async deleteUser(req: Request, res: Response) {
     try {
       const uuid = req.params.id;
       const user = await this.userService.getUserById(uuid);
@@ -69,12 +70,12 @@ class UserController {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: error,
       });
     }
   }
 
-  async updateUser(req, res) {
+  async updateUser(req: Request, res: Response) {
     try {
       const uuid = req.params.id;
       const user = await this.userService.getUserById(uuid);
@@ -95,7 +96,7 @@ class UserController {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: error.message,
+        message: error,
       });
     }
   }

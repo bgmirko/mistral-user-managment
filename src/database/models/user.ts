@@ -8,7 +8,7 @@ export default class User extends Model<User> {
 
   @ForeignKey(() => Permission)
   @Column({type: DataType.INTEGER})
-  permissionId: string;
+  permissionId: number;
 
   @Column({allowNull: false, validate: {notEmpty: true}})
   firstName: string;

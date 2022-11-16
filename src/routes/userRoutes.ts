@@ -1,21 +1,22 @@
 import express from 'express';
 import { userController } from '../controllers/userController';
+import type { Response, Request } from 'express';
 
 const router = express.Router();
 
-router.get('/users', async(req, res) => {
+router.get('/', async(req: Request, res: Response) => {
     await userController.getUsers(req, res);
 })
 
-router.post('/users/new', async(req, res) => {
+router.post('/new', async(req: Request, res: Response) => {
     await userController.createUser(req, res);
 })
 
-router.delete('/users/delete/:id', async(req, res) => {
+router.delete('/:id', async(req: Request, res: Response) => {
     await userController.deleteUser(req, res);
 })
 
-router.put('/users/update/:id', async(req, res) => {
+router.put('/:id', async(req: Request, res: Response) => {
     await userController.updateUser(req, res);
 })
 

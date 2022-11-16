@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
     res.send("<h1>Hello from Mistral User Management</h1>")
 })
 
-app.use(userRoutes);
+app.use("/users", userRoutes);
 
 //Error handler must be last app.use!!
 app.use((err, req, res, next) => {
