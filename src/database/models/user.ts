@@ -1,31 +1,54 @@
-import {Table, Column, Model, BelongsTo, CreatedAt, UpdatedAt, DeletedAt, DataType, BeforeCreate, ForeignKey} from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  BelongsTo,
+  CreatedAt,
+  UpdatedAt,
+  DeletedAt,
+  DataType,
+  ForeignKey,
+} from "sequelize-typescript";
 import Permission from "./permession";
+import { Length, IsEmail, IsNotEmpty } from "class-validator";
 
-@Table({tableName: "user"})
+@Table({ tableName: "user" })
 export default class User extends Model<User> {
-  @Column({type: DataType.UUID, primaryKey: true, defaultValue: DataType.UUIDV4})
+  @Column({
+    type: DataType.UUID,
+    primaryKey: true,
+    defaultValue: DataType.UUIDV4,
+  })
   uuid: string;
 
   @ForeignKey(() => Permission)
-  @Column({type: DataType.INTEGER})
+  @Column({ type: DataType.INTEGER })
   permissionId: number;
 
-  @Column({allowNull: false, validate: {notEmpty: true}})
+  @Length(3, 15)
+  @Column({ allowNull: false, validate: { notEmpty: true } })
   firstName: string;
 
-  @Column({allowNull: false, validate: {notEmpty: true}})
+  @Length(3, 15)
+  @Column({ allowNull: false, validate: { notEmpty: true } })
   lastName: string;
 
-  @Column({allowNull: false, validate: {notEmpty: true}})
+  @Length(3, 10)
+  @Column({ allowNull: false, validate: { notEmpty: true } })
   username: string;
 
-  @Column({allowNull: false, unique: true, validate: {notEmpty: true, isEmail: true}})
+  @IsEmail()
+  @Column({
+    allowNull: false,
+    unique: true,
+    validate: { notEmpty: true, isEmail: true },
+  })
   email: string;
 
-  @Column({allowNull: false, validate: {notEmpty: true}})
+  @Column({ allowNull: false, validate: { notEmpty: true } })
   password: string;
 
-  @Column({defaultValue: true})
+  @Column({ defaultValue: true })
   status: boolean;
 
   @CreatedAt
