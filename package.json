@@ -1,16 +1,27 @@
 {
-  "name": "mistral-user-managment",
+  "name": "mistral-user-management",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/bgmirko/mistral-user-managment.git",
-  "author": "Mirko Martinovic <mirko.martinovic@quantox.com>",
+  "author": "Mirko Martinovic <mirkojanuar@gmail.com>",
   "license": "MIT",
+  "description": "Simple demo project, rest API, to demonstrate implementation of Postgres database, Sequelize ORM, request validation, and implementation of sequelize-typescript",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "dev": "tsnd --respawn src/index.ts",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "class-validator",
+    "postgres",
+    "sequelize",
+    "sequelize-typescript",
+    "docker",
+    "docker-compose",
+    "express",
+    "rest api"
+  ],
   "dependencies": {
     "@types/validator": "^13.7.10",
     "bcryptjs": "^2.4.3",
